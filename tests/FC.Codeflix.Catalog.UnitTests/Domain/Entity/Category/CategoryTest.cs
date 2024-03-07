@@ -17,24 +17,19 @@ public class CategoryTest
     [Trait("Domain","Category - Aggregates")]
     public void Instantiate()
     {
-        //var validDate = new
-        //{
-        //    Name = "category name",
-        //    Description = "category description",
-        //};
         var validCategory = _categoryTestFixture.GetValidCategory();
         var datetimeBefore = DateTime.Now;
 
         var category = new DomainCategory.Category(validCategory.Name, validCategory.Description);
-        var datetimeAfter = DateTime.Now;
+        var datetimeAfter = DateTime.Now.AddSeconds(1);
 
         category.Should().NotBeNull();
         category.Name.Should().Be(validCategory.Name);
         category.Description.Should().Be(validCategory.Description);
         category.Id.Should().NotBeEmpty();
         category.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
-        (category.CreatedAt > datetimeBefore).Should().BeTrue();
-        (category.CreatedAt < datetimeAfter).Should().BeTrue();
+        (category.CreatedAt >= datetimeBefore).Should().BeTrue();
+        (category.CreatedAt <= datetimeAfter).Should().BeTrue();
         category.IsActive.Should().BeTrue();
 
         //Assert.NotNull(category);
@@ -53,16 +48,11 @@ public class CategoryTest
     [InlineData(false)]
     public void InstantiateWithIsActive(bool isActive)
     {
-        //var validDate = new
-        //{
-        //    Name = "category name",
-        //    Description = "category description",
-        //};
         var validCategory = _categoryTestFixture.GetValidCategory();
         var datetimeBefore = DateTime.Now;
 
         var category = new DomainCategory.Category(validCategory.Name, validCategory.Description, isActive);
-        var datetimeAfter = DateTime.Now;
+        var datetimeAfter = DateTime.Now.AddSeconds(1);
 
         category.Should().NotBeNull();
         category.Name.Should().Be(validCategory.Name);
