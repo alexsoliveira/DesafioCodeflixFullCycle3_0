@@ -199,12 +199,12 @@ public class CategoryTest
     public void Update()
     {
         var validCategory = _categoryTestFixture.GetValidCategory();
-        var newValue = new { Name = "Category New Name", Description = "Category New Description" };
+        var categoryWithNewValue = _categoryTestFixture.GetValidCategory();
 
-        validCategory.Update(newValue.Name, newValue.Description);
+        validCategory.Update(categoryWithNewValue.Name, categoryWithNewValue.Description);
 
-        validCategory.Name.Should().Be(newValue.Name);
-        validCategory.Description.Should().Be(newValue.Description);
+        validCategory.Name.Should().Be(categoryWithNewValue.Name);
+        validCategory.Description.Should().Be(categoryWithNewValue.Description);
         //Assert.Equal(category.Name, newValue.Name);
         //Assert.Equal(category.Description, newValue.Description);
     }
@@ -214,12 +214,13 @@ public class CategoryTest
     public void UpdateOnlyName()
     {
         var validCategory = _categoryTestFixture.GetValidCategory();
-        var newValue = new { Name = "Category New Name" };
+        
+        var newName = _categoryTestFixture.GetValidCategoryName();
         var currentDescription = validCategory.Description;
 
-        validCategory.Update(newValue.Name);
+        validCategory.Update(newName);
 
-        validCategory.Name.Should().Be(newValue.Name);
+        validCategory.Name.Should().Be(newName);
         validCategory.Description.Should().Be(currentDescription);
         //Assert.Equal(category.Name, newValue.Name);
         //Assert.Equal(category.Description, currentDescription);
@@ -267,7 +268,7 @@ public class CategoryTest
     public void UpdateErrorWhenNameIsGreaterThan255Characters()
     {
         var validCategory = _categoryTestFixture.GetValidCategory();
-        var invalidName = string.Join(null, Enumerable.Range(1, 256).Select(_ => "a").ToArray());
+        var invalidName = _categoryTestFixture.Faker.Lorem.Letter(256);
         
         Action action =
             () => validCategory.Update(invalidName, validCategory.Description);
@@ -283,7 +284,10 @@ public class CategoryTest
     public void UpdateErrorWhenDescriptionIsGreaterThan10_000Characters()
     {
         var validCategory = _categoryTestFixture.GetValidCategory();
-        var invalidDescription = string.Join(null, Enumerable.Range(1, 10_001).Select(_ => "a").ToArray());
+        var invalidDescription = _categoryTestFixture.Faker.Commerce.ProductDescription();
+
+        while (invalidDescription.Length <= 10_000)
+            invalidDescription = $"{invalidDescription} {_categoryTestFixture.Faker.Commerce.ProductDescription()}";
         
         Action action =
             () => new DomainCategory.Category(validCategory.Name, invalidDescription);
