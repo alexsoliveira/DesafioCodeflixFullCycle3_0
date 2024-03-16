@@ -62,6 +62,33 @@ public class DomainValidationTest
             .WithMessage("FieldName should not be null or empty");
     }
     // tamanho minimo
+    [Theory(DisplayName = nameof(MinLengthOK))]
+    [Trait("Domain", "DomainValidation - Validation")]
+    [MemberData(nameof(GetValuesGreaterThanTheMin), parameters: 10)]
+    public void MinLengthOK(string target, int minLength)
+    {
+        Action action =
+            () => DomainValidation.MinLength(target, minLength, "FieldName");
+
+        action
+            .Should()
+            .NotThrow();            
+    }
+
+    public static IEnumerable<object[]> GetValuesGreaterThanTheMin(int numbersOfTests = 5)
+    {
+        yield return new object[] { "12345", 5 };
+
+        var faker = new Faker();
+
+        for (int i = 0; i < (numbersOfTests - 1); i++)
+        {
+            var example = faker.Commerce.ProductName();
+            var minLength = example.Length - (new Random()).Next(1, 5);
+            yield return new object[] { example, minLength };
+        }
+    }
+
     [Theory(DisplayName = nameof(MinLengthThrowWhenLess))]
     [Trait("Domain", "DomainValidation - Validation")]
     [MemberData(nameof(GetValuesSmallerThanTheMin), parameters: 10)]
@@ -76,13 +103,13 @@ public class DomainValidationTest
             .WithMessage($"FieldName should not be less than {minLength} characters long");
     }
 
-    private static IEnumerable<object[]> GetValuesSmallerThanTheMin(int numbersOfTests = 5)
+    public static IEnumerable<object[]> GetValuesSmallerThanTheMin(int numbersOfTests = 5)
     {
         yield return new object[] { "12345", 10 };
 
         var faker = new Faker();
 
-        for (int i = 0; i < numbersOfTests; i++)
+        for (int i = 0; i < (numbersOfTests - 1); i++)
         {
             var example = faker.Commerce.ProductName();
             var minLength = example.Length + (new Random()).Next(1, 20);
