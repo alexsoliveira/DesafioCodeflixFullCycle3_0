@@ -2,6 +2,7 @@
 using FC.Codeflix.Catalog.Domain.SeedWork;
 
 namespace FC.Codeflix.Catalog.Domain.Entity;
+
 public class Category : AggregateRoot
 {
     public string Name { get; private set; }
