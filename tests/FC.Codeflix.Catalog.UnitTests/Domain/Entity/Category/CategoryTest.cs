@@ -104,7 +104,7 @@ public class CategoryTest
 
         action.Should()
             .Throw<EntityValidationException>()
-            .WithMessage("Description should not be empty or null");
+            .WithMessage("Description should not be null");
 
         //var exception = Assert.Throws<EntityValidationException>(action);
         //Assert.Equal("Description should not be empty or null", exception.Message);
@@ -171,7 +171,7 @@ public class CategoryTest
 
         action.Should()
             .Throw<EntityValidationException>()
-            .WithMessage("Description should be less or equal 10.000 characters long");
+            .WithMessage("Description should be less or equal 10000 characters long");
 
         //var exception = Assert.Throws<EntityValidationException>(action);
         //Assert.Equal("Description should be less or equal 10.000 characters long", exception.Message);
@@ -303,7 +303,7 @@ public class CategoryTest
             () => new DomainCategory.Category(validCategory.Name, invalidDescription);
 
         action.Should().Throw<EntityValidationException>()
-           .WithMessage("Description should be less or equal 10.000 characters long");
+           .WithMessage("Description should be less or equal 10000 characters long");
         //var exception = Assert.Throws<EntityValidationException>(action);
         //Assert.Equal("Description should be less or equal 10.000 characters long", exception.Message);
     }
