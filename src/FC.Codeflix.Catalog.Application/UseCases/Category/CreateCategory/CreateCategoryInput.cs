@@ -5,7 +5,10 @@ public class CreateCategoryInput
     public string Description { get; set; }
     public bool IsActive { get; set; }
 
-    public CreateCategoryInput(string name, string? description = null, bool isActive = true)
+    public CreateCategoryInput(
+        string name, 
+        string? description = null, 
+        bool isActive = true)
     {
         Name = name;
         Description = description ?? "";
