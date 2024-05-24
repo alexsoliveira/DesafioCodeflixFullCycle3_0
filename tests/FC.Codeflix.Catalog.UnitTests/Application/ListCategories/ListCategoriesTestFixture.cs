@@ -7,7 +7,7 @@ using Xunit;
 
 namespace FC.Codeflix.Catalog.UnitTests.Application.ListCategories;
 
-[Collection(nameof(ListCategoriesTestFixture))]
+[CollectionDefinition(nameof(ListCategoriesTestFixture))]
 public class ListCategoriesTestFixtureCollection
     : ICollectionFixture<ListCategoriesTestFixture>
 { }
