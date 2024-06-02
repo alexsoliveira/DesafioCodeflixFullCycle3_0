@@ -1,7 +1,6 @@
-﻿
-using FC.Codeflix.Catalog.Application.UseCases.Category.ListCategories;
+﻿using FC.Codeflix.Catalog.Application.UseCases.Category.ListCategories;
 
-namespace FC.Codeflix.Catalog.UnitTests.Application.ListCategories
+namespace FC.Codeflix.Catalog.UnitTests.Application.Category.ListCategories
 {
     public class ListCategoriesTestDataGenerator
     {
@@ -9,7 +8,7 @@ namespace FC.Codeflix.Catalog.UnitTests.Application.ListCategories
         {
             var fixture = new ListCategoriesTestFixture();
             var inputExample = fixture.GetExampleInput();
-            for (int i = 0; i < times; i++) 
+            for (int i = 0; i < times; i++)
             {
                 switch (i % 6)
                 {
@@ -20,7 +19,7 @@ namespace FC.Codeflix.Catalog.UnitTests.Application.ListCategories
                         yield return new object[] { new ListCategoriesInput(inputExample.Page) };
                         break;
                     case 2:
-                        yield return new object[] { 
+                        yield return new object[] {
                             new ListCategoriesInput(
                                 inputExample.Page,
                                 inputExample.PerPage)
