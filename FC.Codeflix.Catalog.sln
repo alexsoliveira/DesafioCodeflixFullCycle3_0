@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FC.Codeflix.Catalog.UnitTes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FC.Codeflix.Catalog.Domain", "src\FC.Codeflix.Catalog.Domain\FC.Codeflix.Catalog.Domain.csproj", "{EF56C1F5-14BF-41FE-85A4-D71F22AED4E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FC.Codeflix.Catalog.Application", "src\FC.Codeflix.Catalog.Application\FC.Codeflix.Catalog.Application.csproj", "{9A972188-B74B-4E88-80BA-74EDD82FCC39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FC.Codeflix.Catalog.Application", "src\FC.Codeflix.Catalog.Application\FC.Codeflix.Catalog.Application.csproj", "{9A972188-B74B-4E88-80BA-74EDD82FCC39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FC.Codeflix.Catalog.IntegrationTests", "tests\FC.Codeflix.Catalog.IntegrationTests\FC.Codeflix.Catalog.IntegrationTests.csproj", "{2B49083C-5556-459F-81DD-86A2D2498F8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,10 @@ Global
 		{9A972188-B74B-4E88-80BA-74EDD82FCC39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A972188-B74B-4E88-80BA-74EDD82FCC39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A972188-B74B-4E88-80BA-74EDD82FCC39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B49083C-5556-459F-81DD-86A2D2498F8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B49083C-5556-459F-81DD-86A2D2498F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B49083C-5556-459F-81DD-86A2D2498F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B49083C-5556-459F-81DD-86A2D2498F8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,6 +45,7 @@ Global
 		{28D84109-0279-464F-BC49-87FFC7DC6A06} = {568908D4-74F8-4630-8CFA-0B9EF1638161}
 		{EF56C1F5-14BF-41FE-85A4-D71F22AED4E8} = {06CBC0E2-58DF-4750-BEAB-7D7676FA7DBE}
 		{9A972188-B74B-4E88-80BA-74EDD82FCC39} = {06CBC0E2-58DF-4750-BEAB-7D7676FA7DBE}
+		{2B49083C-5556-459F-81DD-86A2D2498F8F} = {568908D4-74F8-4630-8CFA-0B9EF1638161}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0257A2D2-4625-44D7-B620-7647519B3AF2}
