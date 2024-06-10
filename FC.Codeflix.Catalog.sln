@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FC.Codeflix.Catalog.Applica
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FC.Codeflix.Catalog.IntegrationTests", "tests\FC.Codeflix.Catalog.IntegrationTests\FC.Codeflix.Catalog.IntegrationTests.csproj", "{2B49083C-5556-459F-81DD-86A2D2498F8F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FC.Codeflix.Catalog.Infra.Data.EF", "src\FC.Codeflix.Catalog.Infra.Data.EF\FC.Codeflix.Catalog.Infra.Data.EF.csproj", "{718B3BC7-76BE-4328-B0FD-F7CA38E49A8C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{2B49083C-5556-459F-81DD-86A2D2498F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B49083C-5556-459F-81DD-86A2D2498F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B49083C-5556-459F-81DD-86A2D2498F8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{718B3BC7-76BE-4328-B0FD-F7CA38E49A8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{718B3BC7-76BE-4328-B0FD-F7CA38E49A8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{718B3BC7-76BE-4328-B0FD-F7CA38E49A8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{718B3BC7-76BE-4328-B0FD-F7CA38E49A8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{EF56C1F5-14BF-41FE-85A4-D71F22AED4E8} = {06CBC0E2-58DF-4750-BEAB-7D7676FA7DBE}
 		{9A972188-B74B-4E88-80BA-74EDD82FCC39} = {06CBC0E2-58DF-4750-BEAB-7D7676FA7DBE}
 		{2B49083C-5556-459F-81DD-86A2D2498F8F} = {568908D4-74F8-4630-8CFA-0B9EF1638161}
+		{718B3BC7-76BE-4328-B0FD-F7CA38E49A8C} = {06CBC0E2-58DF-4750-BEAB-7D7676FA7DBE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0257A2D2-4625-44D7-B620-7647519B3AF2}
