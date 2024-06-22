@@ -48,6 +48,10 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.Catego
             GetRandomBoolean()
         );
 
+        public List<Category> GetExampleCategoryList(int length = 10)
+        => Enumerable.Range(1, length)
+            .Select(_ => GetExampleCategory()).ToList();
+
         public CodeflixCatalogDbContext CreateDbContext()
             => new CodeflixCatalogDbContext(
                 new DbContextOptionsBuilder<CodeflixCatalogDbContext>()
