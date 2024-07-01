@@ -177,6 +177,48 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.Catego
             output.Items.Should().HaveCount(0);            
         }
 
+        [Theory(DisplayName = nameof(SearchReturnsPaginated))]
+        [Trait("Integration/Infra.Data", "CategoryRepository - Repositories")]
+        [InlineData(10, 1, 5, 5)]
+        [InlineData(10, 2, 5, 5)]
+        [InlineData(7, 2, 5, 2)]
+        [InlineData(7, 3, 5, 0)]
+        public async Task SearchReturnsPaginated(
+            int quantityCategoriesToGenerate,
+            int page,
+            int perPage,
+            int expectedQuatityItems
+        )
+        {
+            CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
+            var exampleCategoryList = 
+                _fixture.GetExampleCategoryList(quantityCategoriesToGenerate);
+            await dbContext.AddRangeAsync(exampleCategoryList);
+            await dbContext.SaveChangesAsync(CancellationToken.None);
+            var categoryRepository = new Repository.CategoryRepository(dbContext);
+            var searchInput = new SearchInput(page, perPage, "", "", SearchOrder.Asc);
+
+            var output = await categoryRepository.Search(searchInput, CancellationToken.None);
+
+            output.Should().NotBeNull();
+            output.Items.Should().NotBeNull();
+            output.CurrentPage.Should().Be(searchInput.Page);
+            output.PerPage.Should().Be(searchInput.PerPage);
+            output.Total.Should().Be(quantityCategoriesToGenerate);
+            output.Items.Should().HaveCount(expectedQuatityItems);
+            foreach (Category outputItem in output.Items)
+            {
+                var exampleItem = exampleCategoryList.Find(
+                    category => category.Id == outputItem.Id
+                );
+                exampleItem.Should().NotBeNull();
+                outputItem.Name.Should().Be(exampleItem!.Name);
+                outputItem.Description.Should().Be(exampleItem.Description);
+                outputItem.IsActive.Should().Be(exampleItem.IsActive);
+                outputItem.CreatedAt.Should().Be(exampleItem.CreatedAt);
+            }
+        }
+
         //public void Dispose()
         //{
         //   _fixture.CleanInMemorydatabase();
