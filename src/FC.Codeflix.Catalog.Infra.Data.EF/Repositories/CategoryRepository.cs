@@ -21,13 +21,21 @@ namespace FC.Codeflix.Catalog.Infra.Data.EF.Repositories
 
         public async Task<Category> Get(Guid id, CancellationToken cancellationToken)
         {
-            var category = await _categories.FindAsync(new object[] { id }, cancellationToken);
+            //var category = await _categories.FindAsync(new object[] { id }, cancellationToken);
+            var category = await _categories.AsNoTracking().FirstOrDefaultAsync(
+                c => c.Id == id,
+                cancellationToken
+            );
             //if (category == null)
             //    throw new NotFoundException($"Category '{id}' not found.");
             NotFoundException.ThrowIfNull(category, $"Category '{id}' not found.");
             return category!;
         }
+
+        public Task Update(Category aggregate, CancellationToken cancellationToken)
+            => Task.FromResult(_categories.Update(aggregate));
         
+
 
         public Task Delete(Category aggregate, CancellationToken cancellationToken)
         {
@@ -39,9 +47,6 @@ namespace FC.Codeflix.Catalog.Infra.Data.EF.Repositories
             throw new NotImplementedException();
         }
 
-        public Task Update(Category aggregate, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }
