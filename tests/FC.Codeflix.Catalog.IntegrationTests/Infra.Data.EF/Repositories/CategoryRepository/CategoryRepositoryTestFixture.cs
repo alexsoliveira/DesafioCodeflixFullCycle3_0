@@ -78,28 +78,6 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.Catego
                 _ => listClone.OrderBy(x => x.Name),
             };
             return orderedEnumerable.ToList();
-        }
-
-        public CodeflixCatalogDbContext CreateDbContext(bool preserveData = false)
-        {
-            var context = new CodeflixCatalogDbContext(
-                new DbContextOptionsBuilder<CodeflixCatalogDbContext>()
-                .UseInMemoryDatabase("integration-texts-db")
-                .Options
-            );
-            if(preserveData == false)
-                context.Database.EnsureDeleted();
-            return context;
-        }
-
-        //public CodeflixCatalogDbContext CreateDbContext()
-        //    => new CodeflixCatalogDbContext(
-        //        new DbContextOptionsBuilder<CodeflixCatalogDbContext>()
-        //        .UseInMemoryDatabase("integration-texts-db")
-        //        .Options
-        //    );
-
-        //public void CleanInMemorydatabase()
-        //   => CreateDbContext().Database.EnsureDeleted();
+        }        
     }
 }
