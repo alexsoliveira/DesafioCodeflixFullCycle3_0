@@ -278,6 +278,56 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.Catego
             }
         }
 
+        [Theory(DisplayName = nameof(SearchOrdered))]
+        [Trait("Integration/Infra.Data", "CategoryRepository - Repositories")]
+        [InlineData("name", "asc")]
+        [InlineData("name", "desc")]
+        [InlineData("id", "asc")]
+        [InlineData("id", "desc")]
+        [InlineData("createdAt", "asc")]
+        [InlineData("createdAt", "desc")]
+        [InlineData("", "asc")]
+        public async Task SearchOrdered(
+            string orderBy,
+            string order            
+        )
+        {
+            CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
+            var exampleCategoryList =
+                _fixture.GetExampleCategoryList(10);                
+            await dbContext.AddRangeAsync(exampleCategoryList);
+            await dbContext.SaveChangesAsync(CancellationToken.None);
+            var categoryRepository = new Repository.CategoryRepository(dbContext);
+            var searchOrder = order.ToLower() == "asc" ? SearchOrder.Asc : SearchOrder.Desc;
+            var searchInput = new SearchInput(1, 20, "", orderBy, searchOrder);
+
+            var output = await categoryRepository.Search(searchInput, CancellationToken.None);
+
+            var expectedOrderedList = _fixture.CloneCategoriesOrdered(
+                exampleCategoryList,
+                orderBy,
+                searchOrder
+            );
+            output.Should().NotBeNull();
+            output.Items.Should().NotBeNull();
+            output.CurrentPage.Should().Be(searchInput.Page);
+            output.PerPage.Should().Be(searchInput.PerPage);
+            output.Total.Should().Be(exampleCategoryList.Count);
+            output.Items.Should().HaveCount(exampleCategoryList.Count);
+            for(int indice = 0; indice < expectedOrderedList.Count; indice++)
+            {
+                var expectedItem = expectedOrderedList[indice];
+                var outputItem = output.Items[indice];
+                expectedItem.Should().NotBeNull();
+                outputItem.Should().NotBeNull();
+                outputItem.Id.Should().Be(expectedItem!.Id);
+                outputItem.Name.Should().Be(expectedItem.Name);
+                outputItem.Description.Should().Be(expectedItem.Description);
+                outputItem.IsActive.Should().Be(expectedItem.IsActive);
+                outputItem.CreatedAt.Should().Be(expectedItem.CreatedAt);
+            }           
+        }
+
         //public void Dispose()
         //{
         //   _fixture.CleanInMemorydatabase();
