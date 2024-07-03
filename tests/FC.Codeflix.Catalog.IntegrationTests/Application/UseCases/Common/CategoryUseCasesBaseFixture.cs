@@ -1,4 +1,5 @@
-﻿using FC.Codeflix.Catalog.IntegrationTests.Base;
+﻿using FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
+using FC.Codeflix.Catalog.IntegrationTests.Base;
 using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 
 namespace FC.Codeflix.Catalog.IntegrationTests.Application.UseCases.Common
@@ -42,6 +43,6 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Application.UseCases.Common
 
         public List<DomainEntity.Category> GetExampleCategoriesList(int length = 10)
             => Enumerable.Range(1, length)
-            .Select(_ => GetExampleCategory()).ToList();
+            .Select(_ => GetExampleCategory()).ToList();        
     }
 }

@@ -1,6 +1,4 @@
-﻿
-
-using UseCase = FC.Codeflix.Catalog.Application.UseCases.Category.GetCategory;
+﻿using UseCase = FC.Codeflix.Catalog.Application.UseCases.Category.GetCategory;
 using FC.Codeflix.Catalog.Infra.Data.EF.Repositories;
 using Xunit;
 using FluentAssertions;
