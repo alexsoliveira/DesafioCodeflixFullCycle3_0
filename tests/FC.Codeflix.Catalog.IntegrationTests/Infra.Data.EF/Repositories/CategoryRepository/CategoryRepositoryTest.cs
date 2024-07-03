@@ -43,7 +43,7 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.Catego
         {
             CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
             var exampleCategory = _fixture.GetExampleCategory();
-            var exampleCategoryList = _fixture.GetExampleCategoryList(15);
+            var exampleCategoryList = _fixture.GetExampleCategoriesList(15);
             exampleCategoryList.Add(exampleCategory);
             await dbContext.AddRangeAsync(exampleCategoryList);
             await dbContext.SaveChangesAsync(CancellationToken.None);
@@ -67,7 +67,7 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.Catego
         {
             CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
             var exampleId = Guid.NewGuid();
-            await dbContext.AddRangeAsync(_fixture.GetExampleCategoryList(15));
+            await dbContext.AddRangeAsync(_fixture.GetExampleCategoriesList(15));
             await dbContext.SaveChangesAsync(CancellationToken.None);
             var categoryRepository = new Repository.CategoryRepository(dbContext);
 
@@ -85,7 +85,7 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.Catego
             CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
             var exampleCategory = _fixture.GetExampleCategory();
             var newCategoryValues = _fixture.GetExampleCategory();
-            var exampleCategoryList = _fixture.GetExampleCategoryList(15);
+            var exampleCategoryList = _fixture.GetExampleCategoriesList(15);
             exampleCategoryList.Add(exampleCategory);
             await dbContext.AddRangeAsync(exampleCategoryList);
             await dbContext.SaveChangesAsync(CancellationToken.None);
@@ -113,7 +113,7 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.Catego
         {
             CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
             var exampleCategory = _fixture.GetExampleCategory();
-            var exampleCategoryList = _fixture.GetExampleCategoryList(15);
+            var exampleCategoryList = _fixture.GetExampleCategoriesList(15);
             exampleCategoryList.Add(exampleCategory);
             await dbContext.AddRangeAsync(exampleCategoryList);
             await dbContext.SaveChangesAsync(CancellationToken.None);
@@ -132,7 +132,7 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.Catego
         public async Task SearchReturnsListAndTotal()
         {
             CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();          
-            var exampleCategoryList = _fixture.GetExampleCategoryList(15);            
+            var exampleCategoryList = _fixture.GetExampleCategoriesList(15);            
             await dbContext.AddRangeAsync(exampleCategoryList);
             await dbContext.SaveChangesAsync(CancellationToken.None);
             var categoryRepository = new Repository.CategoryRepository(dbContext);
@@ -192,7 +192,7 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.Catego
         {
             CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
             var exampleCategoryList = 
-                _fixture.GetExampleCategoryList(quantityCategoriesToGenerate);
+                _fixture.GetExampleCategoriesList(quantityCategoriesToGenerate);
             await dbContext.AddRangeAsync(exampleCategoryList);
             await dbContext.SaveChangesAsync(CancellationToken.None);
             var categoryRepository = new Repository.CategoryRepository(dbContext);
@@ -294,7 +294,7 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.Catego
         {
             CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
             var exampleCategoryList =
-                _fixture.GetExampleCategoryList(10);                
+                _fixture.GetExampleCategoriesList(10);                
             await dbContext.AddRangeAsync(exampleCategoryList);
             await dbContext.SaveChangesAsync(CancellationToken.None);
             var categoryRepository = new Repository.CategoryRepository(dbContext);
