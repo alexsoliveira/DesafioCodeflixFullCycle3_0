@@ -5,6 +5,7 @@ using Xunit;
 using FluentAssertions;
 using FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
 using FC.Codeflix.Catalog.Domain.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace FC.Codeflix.Catalog.IntegrationTests.Application.UseCases.Category.CreateCategory
 {
@@ -135,6 +136,11 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Application.UseCases.Category.Cre
             await task.Should()
                 .ThrowAsync<EntityValidationException>()
                 .WithMessage(exceptionMessage);
+
+            var dbCategoriesList = _fixture.CreateDbContext(true)
+                .Categories.AsNoTracking()
+                .ToList();
+            dbCategoriesList.Should().HaveCount(0);
 
         }
     }
