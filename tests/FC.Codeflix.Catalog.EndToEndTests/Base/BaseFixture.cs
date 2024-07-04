@@ -8,6 +8,8 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Base
     {
         protected Faker Faker { get; set; }
 
+        public ApiClient ApiClient { get; set; }
+
         public BaseFixture()
             => Faker = new Faker("pt_BR");
 
