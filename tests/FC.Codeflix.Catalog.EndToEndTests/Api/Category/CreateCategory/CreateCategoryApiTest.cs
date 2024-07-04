@@ -35,10 +35,10 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.CreateCategory
             output.Id.Should().NotBeEmpty();
             output.CreatedAt.Should()
                 .NotBeSameDateAs(default);
-            DomainEntity.Category dbCategory = await _fixture
+            var dbCategory = await _fixture
                 .Persistence.GetById(output.Id);
             dbCategory.Should().NotBeNull();
-            dbCategory.Name.Should().Be(input.Name);
+            dbCategory!.Name.Should().Be(input.Name);
             dbCategory.Description.Should().Be(input.Description);
             dbCategory.IsActive.Should().Be(input.IsActive);
             dbCategory.Id.Should().NotBeEmpty();
