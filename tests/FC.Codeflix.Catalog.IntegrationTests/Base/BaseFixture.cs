@@ -17,7 +17,7 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Base
         {
             var context = new CodeflixCatalogDbContext(
                 new DbContextOptionsBuilder<CodeflixCatalogDbContext>()
-                .UseInMemoryDatabase("integration-texts-db")
+                .UseInMemoryDatabase("integration-tests-db")
                 .Options
             );
             if (preserveData == false)
