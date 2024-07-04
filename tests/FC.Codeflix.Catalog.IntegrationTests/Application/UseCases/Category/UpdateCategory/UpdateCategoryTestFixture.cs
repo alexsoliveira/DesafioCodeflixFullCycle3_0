@@ -1,6 +1,6 @@
 ﻿using Bogus;
 using FC.Codeflix.Catalog.Application.UseCases.Category.UpdateCategory;
-using FC.Codeflix.Catalog.IntegrationTests.Application.UseCases.Common;
+using FC.Codeflix.Catalog.IntegrationTests.Application.UseCases.Category.Common;
 using Xunit;
 
 namespace FC.Codeflix.Catalog.IntegrationTests.Application.UseCases.Category.UpdateCategory

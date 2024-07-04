@@ -1,4 +1,4 @@
-﻿using FC.Codeflix.Catalog.IntegrationTests.Application.UseCases.Common;
+﻿using FC.Codeflix.Catalog.IntegrationTests.Application.UseCases.Category.Common;
 using FC.Codeflix.Catalog.IntegrationTests.Base;
 using Xunit;
 
