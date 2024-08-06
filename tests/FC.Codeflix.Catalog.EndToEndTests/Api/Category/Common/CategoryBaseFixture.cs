@@ -1,5 +1,6 @@
 ﻿using FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
 using FC.Codeflix.Catalog.EndToEndTests.Base;
+using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.Common
 {
@@ -62,5 +63,21 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.Common
                 tooLongDescriptionForCategory = $"{tooLongDescriptionForCategory} {Faker.Commerce.ProductDescription()}";            
             return tooLongDescriptionForCategory;
         }
+
+        public DomainEntity.Category GetExampleCategory()
+            => new(
+                GetValidCategoryName(),
+                GetValidCategoryDescription(),
+                GetRandomBoolean()
+            );
+
+        public List<DomainEntity.Category> GetExampleCategoriesList(int listLength = 15)
+            => Enumerable.Range(1, listLength).Select(
+                _ => new DomainEntity.Category(
+                    GetValidCategoryName(),
+                    GetValidCategoryDescription(),
+                    GetRandomBoolean()
+                )
+            ).ToList();
     }
 }

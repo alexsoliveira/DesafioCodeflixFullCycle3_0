@@ -18,7 +18,7 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.CreateCategory
             => _fixture = fixture;
 
         [Fact(DisplayName = nameof(CreateCategory))]
-        [Trait("EndToEnd/API", "Category - Endpoints")]
+        [Trait("EndToEnd/API", "Category/Create - Endpoints")]
         public async Task CreateCategory()
         {
             var input = _fixture.GetExampleInput();
@@ -51,7 +51,7 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.CreateCategory
         }
 
         [Theory(DisplayName = nameof(ThrowWhenCantInstantiateAggregate))]
-        [Trait("EndToEnd/API", "Category - Endpoints")]
+        [Trait("EndToEnd/API", "Category/Create - Endpoints")]
         [MemberData(
             nameof(CreateCategoryTestDataGenerator.GetInvalidInputs),
             MemberType = typeof(CreateCategoryTestDataGenerator)
