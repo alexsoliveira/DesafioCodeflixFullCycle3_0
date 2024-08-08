@@ -53,8 +53,8 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.CreateCategory
         [Theory(DisplayName = nameof(ErrorWhenCantInstantiateAggregate))]
         [Trait("EndToEnd/API", "Category/Create - Endpoints")]
         [MemberData(
-            nameof(CreateCategoryTestDataGenerator.GetInvalidInputs),
-            MemberType = typeof(CreateCategoryTestDataGenerator)
+            nameof(CreateCategoryApiTestDataGenerator.GetInvalidInputs),
+            MemberType = typeof(CreateCategoryApiTestDataGenerator)
         )]
         public async Task ErrorWhenCantInstantiateAggregate(
             CreateCategoryInput input,

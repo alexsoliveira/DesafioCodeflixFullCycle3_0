@@ -1,10 +1,12 @@
-﻿namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.CreateCategory
+﻿using FC.Codeflix.Catalog.EndToEndTests.Api.Category.CreateCategory;
+
+namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.UpdateCategory
 {
-    public class CreateCategoryTestDataGenerator
+    public class UpdateCategoryApiTestDataGenerator
     {
         public static IEnumerable<object[]> GetInvalidInputs()
         {
-            var fixture = new CreateCategoryApiTestFixture();
+            var fixture = new UpdateCategoryApiTestFixture();
             var invalidInputsList = new List<object[]>();
             var totalInvalidCases = 3;
 
@@ -27,7 +29,7 @@
                             input2,
                             "Name should be less or equal 255 characters long"
                     });
-                        break;                    
+                        break;
                     case 2:
                         var input3 = fixture.GetExampleInput();
                         input3.Description = fixture.GetInvalidDescriptionTooLong();
