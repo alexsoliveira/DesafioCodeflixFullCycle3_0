@@ -2,6 +2,7 @@ using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
 using FC.Codeflix.Catalog.Application.UseCases.Category.DeleteCategory;
 using FC.Codeflix.Catalog.Application.UseCases.Category.GetCategory;
+using FC.Codeflix.Catalog.Application.UseCases.Category.ListCategories;
 using FC.Codeflix.Catalog.Application.UseCases.Category.UpdateCategory;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -60,6 +61,17 @@ namespace FC.CodeFlix.Catalog.Api.Controllers
         public async Task<IActionResult> Update(
             [FromBody] UpdateCategoryInput input,
             CancellationToken cancellationToken
+        )
+        {
+            var output = await _mediator.Send(input, cancellationToken);
+            return Ok(output);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(CategoryModelOutput), StatusCodes.Status200OK)]        
+        public async Task<IActionResult> List(
+           [FromRoute] ListCategoriesInput input,
+           CancellationToken cancellationToken
         )
         {
             var output = await _mediator.Send(input, cancellationToken);

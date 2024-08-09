@@ -9,7 +9,7 @@ using Xunit;
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.UpdateCategory
 {
     [Collection(nameof(UpdateCategoryApiTestFixture))]
-    public class UpdateCategoryApiTest
+    public class UpdateCategoryApiTest : IDisposable
     {
         private readonly UpdateCategoryApiTestFixture _fixture;
 
@@ -163,5 +163,8 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.UpdateCategory
             output.Status.Should().Be(StatusCodes.Status422UnprocessableEntity);
             output.Detail.Should().Be(exceptedDetails);
         }
+
+        public void Dispose()
+            => _fixture.CleanPersistence();
     }
 }

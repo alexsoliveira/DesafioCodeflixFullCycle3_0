@@ -1,7 +1,5 @@
 ﻿using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
-using FC.Codeflix.Catalog.EndToEndTests.Api.Category.Common;
 using FluentAssertions;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -10,7 +8,7 @@ using Xunit;
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.GetCategory
 {
     [Collection(nameof(GetCategoryApiTestFixture))]
-    public class GetCategoryApiTest        
+    public class GetCategoryApiTest : IDisposable        
     {
         private readonly GetCategoryApiTestFixture _fixture;
 
@@ -59,5 +57,8 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.GetCategory
             output.Detail.Should().Be($"Category '{randomGuid}' not found.");
             output.Type.Should().Be("NotFound");
         }
+
+        public void Dispose()
+            => _fixture.CleanPersistence();
     }
 }

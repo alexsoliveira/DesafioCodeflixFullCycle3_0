@@ -1,5 +1,4 @@
-﻿using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -8,7 +7,7 @@ using Xunit;
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.DeleteCategory
 {
     [Collection(nameof(DeleteCategoryApiTestFixture))]
-    public class DeleteCategoryApiTest
+    public class DeleteCategoryApiTest : IDisposable
     {
         private readonly DeleteCategoryApiTestFixture _fixture;
 
@@ -55,5 +54,8 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.DeleteCategory
             output.Status.Should().Be((int)StatusCodes.Status404NotFound);
             output.Detail.Should().Be($"Category '{randomGuid}' not found.");            
         }
+
+        public void Dispose()
+            => _fixture.CleanPersistence();
     }
 }

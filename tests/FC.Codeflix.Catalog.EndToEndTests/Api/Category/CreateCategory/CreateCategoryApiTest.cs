@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http;
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.CreateCategory
 {
     [Collection(nameof(CreateCategoryApiTestFixture))]
-    public class CreateCategoryApiTest
+    public class CreateCategoryApiTest : IDisposable
     {
         private readonly CreateCategoryApiTestFixture _fixture;
 
@@ -48,7 +48,7 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.CreateCategory
             output.CreatedAt.Should()
                 .NotBeSameDateAs(default);
 
-        }
+        }        
 
         [Theory(DisplayName = nameof(ErrorWhenCantInstantiateAggregate))]
         [Trait("EndToEnd/API", "Category/Create - Endpoints")]
@@ -72,9 +72,10 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.CreateCategory
             output!.Title.Should().Be("One or more validation errors ocurred");
             output.Type.Should().Be("UnprocessableEntity");
             output.Status.Should().Be(StatusCodes.Status422UnprocessableEntity);
-            output.Detail.Should().Be(expectedDetail);
-            
-
+            output.Detail.Should().Be(expectedDetail);            
         }
+
+        public void Dispose()
+            => _fixture.CleanPersistence();
     }
 }
