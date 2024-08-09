@@ -60,7 +60,8 @@ namespace FC.Codeflix.Catalog.Infra.Data.EF.Repositories
             string orderProperty,
             SearchOrder order
         )
-            => (orderProperty.ToLower(), order) switch
+        {
+            var orderedQuery = (orderProperty.ToLower(), order) switch
             {
                 ("name", SearchOrder.Asc) => query.OrderBy(x => x.Name),
                 ("name", SearchOrder.Desc) => query.OrderByDescending(x => x.Name),
@@ -70,5 +71,8 @@ namespace FC.Codeflix.Catalog.Infra.Data.EF.Repositories
                 ("createdat", SearchOrder.Desc) => query.OrderByDescending(x => x.CreatedAt),
                 _ => query.OrderBy(x => x.Name)
             };
+            return orderedQuery.ThenBy(x => x.CreatedAt);
+        }
+            
     }
 }
