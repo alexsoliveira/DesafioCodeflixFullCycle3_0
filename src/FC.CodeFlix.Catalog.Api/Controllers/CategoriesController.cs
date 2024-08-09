@@ -74,8 +74,8 @@ namespace FC.CodeFlix.Catalog.Api.Controllers
             CancellationToken cancellationToken,
            [FromQuery] int? page = null,
            [FromQuery] int? perPage = null,
-           [FromQuery] string? search = "",
-           [FromQuery] string? sort = "",
+           [FromQuery] string? search = null,
+           [FromQuery] string? sort = null,
            [FromQuery] SearchOrder? dir = null           
         )
         {
