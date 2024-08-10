@@ -6,6 +6,7 @@ using System.Net;
 using FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using FC.Codeflix.Catalog.EndToEndTests.Extensions.DateTime;
 
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.CreateCategory
 {
@@ -47,7 +48,6 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.CreateCategory
             dbCategory.Id.Should().NotBeEmpty();
             output.CreatedAt.Should()
                 .NotBeSameDateAs(default);
-
         }        
 
         [Theory(DisplayName = nameof(ErrorWhenCantInstantiateAggregate))]
