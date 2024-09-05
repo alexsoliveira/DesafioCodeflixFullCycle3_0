@@ -9,3 +9,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: C0D3fl1X.@
     
+networks:
+  default:
+    name: service_catalog
