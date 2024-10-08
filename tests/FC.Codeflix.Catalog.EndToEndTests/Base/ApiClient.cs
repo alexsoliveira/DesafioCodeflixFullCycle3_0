@@ -1,15 +1,29 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
+﻿using FC.Codeflix.Catalog.EndToEndTests.Extensions.String;
+using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using System.Text.Json;
 
 namespace FC.Codeflix.Catalog.EndToEndTests.Base
 {
+    class SnakeCaseNamingPolicy : JsonNamingPolicy
+    {
+        public override string ConvertName(string name)
+            => name.ToSnakeCase();
+    }
+
     public class ApiClient
     {
         private readonly HttpClient _httpClient;
+        private readonly JsonSerializerOptions _defaultSerializerOptions;
 
         public ApiClient(HttpClient httpClient)
-            => _httpClient = httpClient;
+        {
+            _httpClient = httpClient;
+            _defaultSerializerOptions = new JsonSerializerOptions {
+                PropertyNamingPolicy = new SnakeCaseNamingPolicy(),
+                PropertyNameCaseInsensitive = true
+            };
+        }
 
         public async Task<(HttpResponseMessage?, TOutput?)> Post<TOutput>(
             string route,
@@ -17,10 +31,15 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Base
         )
             where TOutput : class
         {
+            var payloadJson = JsonSerializer.Serialize(
+                payload,
+                _defaultSerializerOptions
+            );
+
             var response = await _httpClient.PostAsync(
                 route,
                 new StringContent(
-                    JsonSerializer.Serialize(payload),
+                    payloadJson,
                     Encoding.UTF8,
                     "application/json"
                 )
@@ -60,7 +79,10 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Base
             var response = await _httpClient.PutAsync(
                 route,
                 new StringContent(
-                    JsonSerializer.Serialize(payload),
+                    JsonSerializer.Serialize(
+                        payload,
+                        _defaultSerializerOptions
+                    ),
                     Encoding.UTF8,
                     "application/json"
                 )
@@ -75,11 +97,9 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Base
             var outputString = await response.Content.ReadAsStringAsync();
             TOutput? output = null;
             if (!string.IsNullOrWhiteSpace(outputString))
-                output = JsonSerializer.Deserialize<TOutput>(outputString,
-                    new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    }
+                output = JsonSerializer.Deserialize<TOutput>(
+                    outputString,
+                    _defaultSerializerOptions
                 );
             return output;
         }
