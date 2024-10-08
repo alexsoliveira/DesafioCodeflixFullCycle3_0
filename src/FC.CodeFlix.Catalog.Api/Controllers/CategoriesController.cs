@@ -6,6 +6,7 @@ using FC.Codeflix.Catalog.Application.UseCases.Category.ListCategories;
 using FC.Codeflix.Catalog.Application.UseCases.Category.UpdateCategory;
 using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 using FC.CodeFlix.Catalog.Api.ApiModels.Category;
+using FC.CodeFlix.Catalog.Api.ApiModels.Response;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,14 +35,14 @@ namespace FC.CodeFlix.Catalog.Api.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        [ProducesResponseType(typeof(CategoryModelOutput), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<CategoryModelOutput>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(
            [FromRoute] Guid id,
            CancellationToken cancellationToken
         ) {
             var output = await _mediator.Send(new GetCategoryInput(id), cancellationToken);
-            return Ok(output);
+            return Ok(new ApiResponse<CategoryModelOutput>(output));
         }
 
         [HttpDelete("{id:guid}")]
