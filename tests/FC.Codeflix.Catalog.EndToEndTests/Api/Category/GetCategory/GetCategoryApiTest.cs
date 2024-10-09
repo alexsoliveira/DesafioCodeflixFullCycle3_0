@@ -1,5 +1,6 @@
 ﻿using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
 using FC.Codeflix.Catalog.EndToEndTests.Extensions.DateTime;
+using FC.CodeFlix.Catalog.Api.ApiModels.Response;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,18 +8,8 @@ using System.Net;
 using Xunit;
 
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.GetCategory
-{
-    public class GetCategoryResponse
-    {
-        public CategoryModelOutput Data { get; set;  }
-
-        public GetCategoryResponse(CategoryModelOutput data)
-        {
-            Data = data;
-        }
-    }
-
-[Collection(nameof(GetCategoryApiTestFixture))]
+{ 
+    [Collection(nameof(GetCategoryApiTestFixture))]
     public class GetCategoryApiTest : IDisposable        
     {
         private readonly GetCategoryApiTestFixture _fixture;
@@ -34,7 +25,7 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.GetCategory
             await _fixture.Persistence.InsertList(exampleCagoriesList);
             var exampleCategory = exampleCagoriesList[10];
 
-            var (response, output) = await  _fixture.ApiClient.Get<GetCategoryResponse>(
+            var (response, output) = await  _fixture.ApiClient.Get<ApiResponse<CategoryModelOutput>>(
                 $"/categories/{exampleCategory.Id}"
             );
 
