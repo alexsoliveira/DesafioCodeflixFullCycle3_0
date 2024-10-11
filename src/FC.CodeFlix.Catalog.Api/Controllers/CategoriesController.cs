@@ -97,8 +97,10 @@ namespace FC.CodeFlix.Catalog.Api.Controllers
             if (!String.IsNullOrWhiteSpace(search)) input.Search = search;
             if (!String.IsNullOrWhiteSpace(sort)) input.Sort = sort;
             if(dir is not null) input.Dir = dir.Value;
-            var output = await _mediator.Send(input, cancellationToken);
-            return Ok(output);
+            var output = await _mediator.Send(input, cancellationToken);            
+            return Ok(
+                new ApiResponseList<CategoryModelOutput>(output)
+            );
         }
     }
 }
