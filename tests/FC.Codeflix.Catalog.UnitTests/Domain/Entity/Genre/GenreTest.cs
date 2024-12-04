@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using FC.Codeflix.Catalog.Domain.Exceptions;
+using FluentAssertions;
 using Xunit;
 using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 
@@ -98,5 +99,35 @@ public class GenreTest
         genre.Name.Should().Be(genre.Name);
         genre.IsActive.Should().Be(oldIsActive);
         genre.CreatedAt.Should().NotBeSameDateAs(default);        
+    }
+
+    [Theory(DisplayName = nameof(InstantiateThrowWhenNameEmpty))]
+    [Trait("Domain", "Genre - Aggregates")]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData(null)]
+    public void InstantiateThrowWhenNameEmpty(string? name)
+    {        
+        var action =
+            () => new DomainEntity.Genre(name!);
+
+        action.Should().Throw<EntityValidationException>()
+            .WithMessage("Name should not be empty or null");                
+    }
+
+    [Theory(DisplayName = nameof(UpdateThrowWhenNameEmpty))]
+    [Trait("Domain", "Genre - Aggregates")]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData(null)]
+    public void UpdateThrowWhenNameEmpty(string? name)
+    {
+        var genre = _fixture.GetExampleGenre();
+
+        var action = 
+            () => genre.Update(name);
+
+        action.Should().Throw<EntityValidationException>()
+            .WithMessage("Name should not be empty or null");
     }
 }
