@@ -3,7 +3,7 @@ using FC.Codeflix.Catalog.Domain.Validation;
 
 namespace FC.Codeflix.Catalog.Domain.Entity;
 
-public class Genre : AggregateRoot
+public class Genre
 {
     public string Name { get; private set; }    
     public DateTime CreatedAt { get; private set; }
@@ -13,7 +13,7 @@ public class Genre : AggregateRoot
 
     private readonly List<Guid> _categories;
 
-    public Genre(string name, bool isActive = true) : base()
+    public Genre(string name, bool isActive = true)
     {
         Name = name;        
         IsActive = isActive;
