@@ -46,6 +46,12 @@ public class Genre : AggregateRoot
         Validate();
     }
 
+    public void RemoveCategory(Guid categoryId)
+    {
+        _categories.Remove(categoryId);
+        Validate();
+    }
+
     private void Validate()
         => DomainValidation.NotNullOrEmpty(Name, nameof(Name));
 }
