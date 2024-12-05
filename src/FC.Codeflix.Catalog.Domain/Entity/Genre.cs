@@ -8,13 +8,17 @@ public class Genre : AggregateRoot
     public string Name { get; private set; }    
     public DateTime CreatedAt { get; private set; }
     public bool IsActive { get; private set; }
+    public IReadOnlyList<Guid> Categories 
+        => _categories.AsReadOnly();
+
+    private readonly List<Guid> _categories;
 
     public Genre(string name, bool isActive = true) : base()
     {
         Name = name;        
         IsActive = isActive;
         CreatedAt = DateTime.Now;
-
+        _categories = new List<Guid>();
         Validate();
     }
 
@@ -33,6 +37,12 @@ public class Genre : AggregateRoot
     public void Update(string name)
     {
         Name = name;
+        Validate();
+    }
+
+    public void AddCategory(Guid categoryId)
+    {
+        _categories.Add(categoryId);
         Validate();
     }
 
