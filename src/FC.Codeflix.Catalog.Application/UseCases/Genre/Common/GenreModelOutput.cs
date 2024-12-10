@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 
 namespace FC.Codeflix.Catalog.Application.UseCases.Genre.Common
 {
@@ -27,5 +23,14 @@ namespace FC.Codeflix.Catalog.Application.UseCases.Genre.Common
             CreatedAt = createdAt;
             Categories = categories;
         }
+
+        public static GenreModelOutput FromGenre(DomainEntity.Genre genre)
+            => new (
+                genre.Id,
+                genre.Name,
+                genre.IsActive,
+                genre.CreatedAt,
+                genre.Categories
+            );
     }
 }
