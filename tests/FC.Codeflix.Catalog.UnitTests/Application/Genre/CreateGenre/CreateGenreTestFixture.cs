@@ -40,4 +40,7 @@ public class CreateGenreTestFixture
 
     public Mock<IUnitOfWork> GetUnitOfWorkMock()
         => new();
+
+    public Mock<ICategoryRepository> GetCategoryRepositoryMock()
+        => new();
 }
