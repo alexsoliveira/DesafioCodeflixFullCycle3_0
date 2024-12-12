@@ -21,6 +21,12 @@ public class CreateGenreTestFixture
             GetRandomBoolean()            
         );
 
+    public CreateGenreInput GetExampleInput(string? name)
+        => new CreateGenreInput(
+            name!,
+            GetRandomBoolean()
+        );
+
     public CreateGenreInput GetExampleInputWithCategories()
     {
         var numberOfCategoriesIds = (new Random()).Next(1,10);
