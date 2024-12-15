@@ -12,10 +12,12 @@ public class GenreUseCasesBaseFixture
     public string GetValidGenreName()
         => Faker.Commerce.Categories(1)[0];
 
-    public DomainEntity.Genre GetExampleGenre()
+    public DomainEntity.Genre GetExampleGenre(
+        bool? isActive = null
+    )
         => new(
             GetValidGenreName(),
-            GetRandomBoolean()
+            isActive ?? GetRandomBoolean()
         );
 
     public Mock<IGenreRepository> GetGenreRepositoryMock()
