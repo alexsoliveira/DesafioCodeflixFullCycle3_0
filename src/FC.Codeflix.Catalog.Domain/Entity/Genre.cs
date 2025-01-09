@@ -52,7 +52,7 @@ public class Genre : AggregateRoot
         Validate();
     }
 
-    public void RemoveAllCategory()
+    public void RemoveAllCategories()
     { 
         _categories.Clear();
         Validate();

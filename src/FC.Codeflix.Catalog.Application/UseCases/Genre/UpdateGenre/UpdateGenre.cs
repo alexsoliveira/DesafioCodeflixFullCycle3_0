@@ -41,11 +41,16 @@ public class UpdateGenre
             if((bool)request.IsActive) genre.Activate();
             else genre.Deactivate();
         }
-        if((request.CategoriesIds?.Count ?? 0) > 0)
+        if(request.CategoriesIds is not null)
         {
-            await ValidateCategoriesIds(request, cancellationToken);
-            genre.RemoveAllCategory();
-            request.CategoriesIds?.ForEach(genre.AddCategory);
+            genre.RemoveAllCategories();
+            
+            if(request.CategoriesIds.Count > 0)
+            {
+                await ValidateCategoriesIds(request, cancellationToken);                
+                request.CategoriesIds?.ForEach(genre.AddCategory);
+            }
+                        
         }            
         await _genreRepository.Update(genre, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);

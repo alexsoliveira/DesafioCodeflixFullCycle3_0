@@ -202,7 +202,7 @@ public class GenreTest
             }
         );
 
-        genre.RemoveAllCategory();
+        genre.RemoveAllCategories();
 
         genre.Categories.Should().HaveCount(0);        
     }
