@@ -1,8 +1,4 @@
-﻿
-using FC.Codeflix.Catalog.Application.UseCases.Genre.Common;
-using FC.Codeflix.Catalog.Domain.Repository;
-using FC.Codeflix.Catalog.Domain.SeedWork;
-using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
+﻿using FC.Codeflix.Catalog.Domain.Repository;
 
 namespace FC.Codeflix.Catalog.Application.UseCases.Genre.ListGenres
 {
@@ -15,29 +11,15 @@ namespace FC.Codeflix.Catalog.Application.UseCases.Genre.ListGenres
             => _genreRepository = genreRepository;
 
         public async Task<ListGenresOutput> Handle(
-            ListGenresInput request, 
+            ListGenresInput input, 
             CancellationToken cancellationToken
         )
-        {
-            var searchInput = new SearchInput( 
-                request.Page,
-                request.PerPage,
-                request.Search,
-                request.Sort,
-                request.Dir
-            );
+        {            
             var searchOutput = await _genreRepository.Search(
-                searchInput,
+                input.ToSearchInput(),
                 cancellationToken
             );
-            return new ListGenresOutput(
-                searchOutput.CurrentPage,
-                searchOutput.PerPage,
-                searchOutput.Total,
-                searchOutput.Items
-                    .Select(GenreModelOutput.FromGenre)
-                    .ToList()
-            );
+            return ListGenresOutput.FromSearchOutput(searchOutput);            
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using FC.Codeflix.Catalog.Application.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Genre.Common;
+using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
+using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 
 namespace FC.Codeflix.Catalog.Application.UseCases.Genre.ListGenres
 {
@@ -14,5 +16,17 @@ namespace FC.Codeflix.Catalog.Application.UseCases.Genre.ListGenres
         ) 
             : base(page, perPage, total, items)
         { }
+
+        public static ListGenresOutput FromSearchOutput(
+            SearchOutput<DomainEntity.Genre> searchOutput
+        ) => new ListGenresOutput(
+                searchOutput.CurrentPage,
+                searchOutput.PerPage,
+                searchOutput.Total,
+                searchOutput.Items
+                    .Select(GenreModelOutput.FromGenre)
+                    .ToList()
+            );
+        
     }
 }
