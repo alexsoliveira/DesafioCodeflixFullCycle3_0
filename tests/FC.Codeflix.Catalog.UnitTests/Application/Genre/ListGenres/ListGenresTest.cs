@@ -113,5 +113,45 @@ namespace FC.Codeflix.Catalog.UnitTests.Application.Genre.ListGenres
                 Times.Once
             );
         }
+
+        [Fact(DisplayName = nameof(ListUsingDefaultInputValues))]
+        [Trait("Application", "ListGenres - Use Cases")]
+        public async Task ListUsingDefaultInputValues()
+        {
+            var genreRepositoryMock = _fixture.GetGenreRepositoryMock();            
+            var outputRepositorySearch = new SearchOutput<DomainEntity.Genre>(
+               currentPage: 1,
+               perPage: 15,
+               items: (IReadOnlyList<DomainEntity.Genre>)new List<DomainEntity.Genre>(),
+               total: 0
+           );
+            genreRepositoryMock.Setup(x => x.Search(
+                It.IsAny<SearchInput>(),
+                It.IsAny<CancellationToken>()
+            )).ReturnsAsync(outputRepositorySearch);
+            var useCase = new UseCase
+                .ListGenres(genreRepositoryMock.Object);
+
+            ListGenresOutput output =
+                await useCase.Handle(new UseCase.ListGenresInput(), CancellationToken.None);
+
+            output.Page.Should().Be(outputRepositorySearch.CurrentPage);
+            output.PerPage.Should().Be(outputRepositorySearch.PerPage);
+            output.Total.Should().Be(outputRepositorySearch.Total);
+            output.Items.Should().HaveCount(outputRepositorySearch.Items.Count);
+            genreRepositoryMock.Verify(
+                x => x.Search(
+                    It.Is<SearchInput>(searchInput =>
+                        searchInput.Page == 1
+                        && searchInput.PerPage == 15
+                        && searchInput.Search == ""
+                        && searchInput.OrderBy == ""
+                        && searchInput.Order == SearchOrder.Asc
+                    ),
+                    It.IsAny<CancellationToken>()
+                ),
+                Times.Once
+            );
+        }
     }
 }
