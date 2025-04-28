@@ -38,10 +38,7 @@ namespace FC.Codeflix.Catalog.UnitTests.Application.Category.Common
                     = categoryDescription[..10_000];
 
             return categoryDescription;
-        }
-
-        public bool GetRandomBoolean()
-            => new Random().NextDouble() > 0.5;
+        }        
 
         public DomainEntity.Category GetExampleCategory()
         => new(

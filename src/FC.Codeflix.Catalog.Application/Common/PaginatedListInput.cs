@@ -1,4 +1,5 @@
 ﻿using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
+using MediatR;
 
 namespace FC.Codeflix.Catalog.Application.Common;
 public abstract class PaginatedListInput
@@ -22,4 +23,7 @@ public abstract class PaginatedListInput
         Sort = sort;
         Dir = dir;
     }
+
+    public SearchInput ToSearchInput()
+        => new SearchInput(Page, PerPage, Search, Sort, Dir);
 }

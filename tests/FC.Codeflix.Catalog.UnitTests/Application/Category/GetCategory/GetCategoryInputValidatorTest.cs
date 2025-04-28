@@ -13,7 +13,7 @@ public class GetCategoryInputValidatorTest
         => _fixture = fixture;
 
     [Fact(DisplayName = nameof(ValidationOk))]
-    [Trait("Application", "GetcategoryInputValidation - UseCases")]
+    [Trait("Application", "GetCategoryInputValidation - UseCases")]
     public void ValidationOk()
     {
         var validIput = new GetCategoryInput(Guid.NewGuid());
@@ -27,7 +27,7 @@ public class GetCategoryInputValidatorTest
     }
 
     [Fact(DisplayName = nameof(InvalidWhenEmptyGuidId))]
-    [Trait("Application", "GetcategoryInputValidation - UseCases")]
+    [Trait("Application", "GetCategoryInputValidation - UseCases")]
     public void InvalidWhenEmptyGuidId()
     {
         var validIput = new GetCategoryInput(Guid.Empty);
