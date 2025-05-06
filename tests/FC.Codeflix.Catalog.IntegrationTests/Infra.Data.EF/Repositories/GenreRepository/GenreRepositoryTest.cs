@@ -1,5 +1,6 @@
 ﻿using FC.Codeflix.Catalog.Domain.SeedWork;
 using FC.Codeflix.Catalog.Infra.Data.EF;
+using FC.Codeflix.Catalog.Infra.Data.EF.Models;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
@@ -48,6 +49,44 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.GenreR
                 .FirstOrDefault(x => x.Id == relation.CategoryId);
                 expectedCategory.Should().NotBeNull();
             });
+        }
+
+        [Fact(DisplayName = nameof(Get))]
+        [Trait("Integration/Infra.Data", "GenreRepository - Repositories")]
+        public async Task Get()
+        {
+            CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
+            var exampleGenre = _fixture.GetExampleGenre();
+            var categoriesListExemple = _fixture.GetExampleCategoriesList(3);
+            categoriesListExemple.ForEach(
+                category => exampleGenre.AddCategory(category.Id)
+            );
+            await dbContext.Categories.AddRangeAsync(categoriesListExemple);
+            await dbContext.Genres.AddAsync(exampleGenre);
+            foreach (var categoryId in exampleGenre.Categories)
+            {
+                var relation = new GenresCategories(categoryId, exampleGenre.Id);
+                dbContext.GenresCategories.AddAsync(relation);
+            }
+            dbContext.SaveChanges();
+            var genreRepository = new Repository.GenreRepository(
+                _fixture.CreateDbContext(true)
+            );            
+
+            var genreFromRepository = await genreRepository.Get(exampleGenre.Id, CancellationToken.None);            
+            
+            genreFromRepository.Should().NotBeNull();
+            genreFromRepository!.Name.Should().Be(exampleGenre.Name);
+            genreFromRepository.IsActive.Should().Be(exampleGenre.IsActive);
+            genreFromRepository.CreatedAt.Should().Be(exampleGenre.CreatedAt);
+            genreFromRepository.Categories.Should()
+                .HaveCount(exampleGenre.Categories.Count);
+            foreach (var categoryId in genreFromRepository.Categories)
+            {
+                var expectedCategory = categoriesListExemple
+                    .FirstOrDefault(x => x.Id == categoryId);
+                expectedCategory.Should().NotBeNull();
+            }                                     
         }
     }
 }

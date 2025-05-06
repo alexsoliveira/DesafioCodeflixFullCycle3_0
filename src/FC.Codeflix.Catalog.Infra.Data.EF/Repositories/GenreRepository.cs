@@ -19,31 +19,40 @@ namespace FC.Codeflix.Catalog.Infra.Data.EF.Repositories
         public GenreRepository(CodeflixCatalogDbContext context)
             => _context = context;
 
-        public Task Delete(Genre aggregate, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Genre> Get(Guid id, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task Insert(
-            Genre genre, 
+            Genre genre,
             CancellationToken cancellationToken)
         {
             await _genres.AddAsync(genre);
-            if(genre.Categories.Count > 0)
+            if (genre.Categories.Count > 0)
             {
                 var relation = genre.Categories
-                    .Select(categoryId => new  GenresCategories(
+                    .Select(categoryId => new GenresCategories(
                         categoryId,
                         genre.Id
                     ));
                 await _genresCategories.AddRangeAsync(relation);
             }
         }
+
+        public async Task<Genre> Get(
+            Guid id, 
+            CancellationToken cancellationToken
+        )
+        {
+            var genre = await _genres.FindAsync(id);
+            var categoryIds = await _genresCategories
+                .Where(x => x.GenreId == genre.Id)
+                .Select(x => x.CategoryId)
+                .ToListAsync();
+            categoryIds.ForEach(genre.AddCategory);
+            return genre;
+        }
+
+        public Task Delete(Genre aggregate, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }                        
 
         public Task<SearchOutput<Genre>> Search(SearchInput input, CancellationToken cancellationToken)
         {
