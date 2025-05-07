@@ -1,4 +1,5 @@
-﻿using FC.Codeflix.Catalog.Domain.Entity;
+﻿using FC.Codeflix.Catalog.Application.Exceptions;
+using FC.Codeflix.Catalog.Domain.Entity;
 using FC.Codeflix.Catalog.Domain.Repository;
 using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 using FC.Codeflix.Catalog.Infra.Data.EF.Models;
@@ -40,11 +41,14 @@ namespace FC.Codeflix.Catalog.Infra.Data.EF.Repositories
             CancellationToken cancellationToken
         )
         {
-            var genre = await _genres.FindAsync(id);
+            var genre = await _genres
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            NotFoundException.ThrowIfNull(genre, $"Genre '{id}' not found.");
             var categoryIds = await _genresCategories
                 .Where(x => x.GenreId == genre.Id)
                 .Select(x => x.CategoryId)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
             categoryIds.ForEach(genre.AddCategory);
             return genre;
         }
