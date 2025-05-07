@@ -121,5 +121,45 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.GenreR
             action.Should().ThrowAsync<NotFoundException>()
                 .WithMessage($"Genre '{examplenotFoundGuid}' not found.");
         }
+
+        [Fact(DisplayName = nameof(Delete))]
+        [Trait("Integration/Infra.Data", "GenreRepository - Repositories")]
+        public async Task Delete()
+        {
+            CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
+            var exampleGenre = _fixture.GetExampleGenre();
+            var categoriesListExemple = _fixture.GetExampleCategoriesList(3);
+            categoriesListExemple.ForEach(
+                category => exampleGenre.AddCategory(category.Id)
+            );
+            await dbContext.Categories.AddRangeAsync(categoriesListExemple);
+            await dbContext.Genres.AddAsync(exampleGenre);
+            foreach (var categoryId in exampleGenre.Categories)
+            {
+                var relation = new GenresCategories(categoryId, exampleGenre.Id);
+                dbContext.GenresCategories.AddAsync(relation);
+            }
+            dbContext.SaveChanges();
+            var repositoryDbContent = _fixture.CreateDbContext(true);
+            var genreRepository = new Repository.GenreRepository(
+                repositoryDbContent
+            );
+
+            await genreRepository.Delete(
+                exampleGenre, 
+                CancellationToken.None
+            );
+            await repositoryDbContent.SaveChangesAsync();
+
+            var assertsDbContext = _fixture.CreateDbContext(true);
+            var dbGenre = assertsDbContext.Genres
+                .AsNoTracking().FirstOrDefault(x => x.Id == exampleGenre.Id);
+            dbGenre.Should().BeNull();
+            var categoriesIdsList = await assertsDbContext.GenresCategories
+                .AsNoTracking().Where(x => x.GenreId == exampleGenre.Id)
+                .Select(x => x.CategoryId)
+                .ToListAsync();
+            categoriesIdsList.Should().HaveCount(0);            
+        }
     }
 }
