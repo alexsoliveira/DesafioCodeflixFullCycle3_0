@@ -63,7 +63,7 @@ namespace FC.Codeflix.Catalog.Infra.Data.EF.Repositories
             );
             _genres.Remove(aggregate);
             return Task.CompletedTask;
-        }                     
+        }        
 
         public Task<SearchOutput<Genre>> Search(SearchInput input, CancellationToken cancellationToken)
         {
@@ -72,7 +72,8 @@ namespace FC.Codeflix.Catalog.Infra.Data.EF.Repositories
 
         public Task Update(Genre aggregate, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            _genres.Update(aggregate);
+            return Task.CompletedTask;
         }
     }
 }
