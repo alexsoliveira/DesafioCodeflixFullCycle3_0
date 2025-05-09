@@ -213,5 +213,111 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.GenreR
                 expectedCategory.Should().NotBeNull();
             });
         }
+
+        [Fact(DisplayName = nameof(UpdateRemovingRelations))]
+        [Trait("Integration/Infra.Data", "GenreRepository - Repositories")]
+        public async Task UpdateRemovingRelations()
+        {
+            CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
+            var exampleGenre = _fixture.GetExampleGenre();
+            var categoriesListExemple = _fixture.GetExampleCategoriesList(3);
+            categoriesListExemple.ForEach(
+                category => exampleGenre.AddCategory(category.Id)
+            );
+            await dbContext.Categories.AddRangeAsync(categoriesListExemple);
+            await dbContext.Genres.AddAsync(exampleGenre);
+            foreach (var categoryId in exampleGenre.Categories)
+            {
+                var relation = new GenresCategories(categoryId, exampleGenre.Id);
+                dbContext.GenresCategories.AddAsync(relation);
+            }
+            dbContext.SaveChanges();
+            var actDbContext = _fixture.CreateDbContext(true);
+            var genreRepository = new Repository.GenreRepository(
+                actDbContext
+            );
+
+            exampleGenre.Update(_fixture.GetValidGenreName());
+            if (exampleGenre.IsActive)
+                exampleGenre.Deactivate();
+            else
+                exampleGenre.Activate();
+            exampleGenre.RemoveAllCategories();
+            await genreRepository.Update(
+                exampleGenre,
+                CancellationToken.None
+            );
+            await actDbContext.SaveChangesAsync();
+
+            var assertsDbContext = _fixture.CreateDbContext(true);
+            var dbGenre = await assertsDbContext
+                .Genres.FindAsync(exampleGenre.Id);
+            dbGenre.Should().NotBeNull();
+            dbGenre!.Name.Should().Be(exampleGenre.Name);
+            dbGenre.IsActive.Should().Be(exampleGenre.IsActive);
+            dbGenre.CreatedAt.Should().Be(exampleGenre.CreatedAt);
+            var genreCategoriesRelations = await assertsDbContext
+                .GenresCategories.Where(r => r.GenreId == exampleGenre.Id)
+                .ToListAsync();
+            genreCategoriesRelations.Should()
+                .HaveCount(0);            
+        }
+
+        [Fact(DisplayName = nameof(UpdateReplacingRelations))]
+        [Trait("Integration/Infra.Data", "GenreRepository - Repositories")]
+        public async Task UpdateReplacingRelations()
+        {
+            CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
+            var exampleGenre = _fixture.GetExampleGenre();
+            var categoriesListExemple = _fixture.GetExampleCategoriesList(3);
+            var updateCategoriesListExemple = _fixture.GetExampleCategoriesList(2);
+            categoriesListExemple.ForEach(
+                category => exampleGenre.AddCategory(category.Id)
+            );
+            await dbContext.Categories.AddRangeAsync(categoriesListExemple);
+            await dbContext.Categories.AddRangeAsync(updateCategoriesListExemple);
+            await dbContext.Genres.AddAsync(exampleGenre);
+            foreach (var categoryId in exampleGenre.Categories)
+            {
+                var relation = new GenresCategories(categoryId, exampleGenre.Id);
+                dbContext.GenresCategories.AddAsync(relation);
+            }
+            dbContext.SaveChanges();
+            var actDbContext = _fixture.CreateDbContext(true);
+            var genreRepository = new Repository.GenreRepository(
+                actDbContext
+            );
+
+            exampleGenre.Update(_fixture.GetValidGenreName());
+            if (exampleGenre.IsActive)
+                exampleGenre.Deactivate();
+            else
+                exampleGenre.Activate();
+            exampleGenre.RemoveAllCategories();
+            updateCategoriesListExemple
+                .ForEach(category => exampleGenre.AddCategory(category.Id));
+            await genreRepository.Update(
+                exampleGenre,
+                CancellationToken.None
+            );
+            await actDbContext.SaveChangesAsync();
+
+            var assertsDbContext = _fixture.CreateDbContext(true);
+            var dbGenre = await assertsDbContext
+                .Genres.FindAsync(exampleGenre.Id);
+            dbGenre.Should().NotBeNull();
+            dbGenre!.Name.Should().Be(exampleGenre.Name);
+            dbGenre.IsActive.Should().Be(exampleGenre.IsActive);
+            dbGenre.CreatedAt.Should().Be(exampleGenre.CreatedAt);
+            var genreCategoriesRelations = await assertsDbContext
+                .GenresCategories.Where(r => r.GenreId == exampleGenre.Id)
+                .ToListAsync();
+            genreCategoriesRelations.Should().HaveCount(updateCategoriesListExemple.Count);
+            genreCategoriesRelations.ForEach(relation => {
+                var expectedCategory = updateCategoriesListExemple
+                .FirstOrDefault(x => x.Id == relation.CategoryId);
+                expectedCategory.Should().NotBeNull();
+            });
+        }
     }
 }
