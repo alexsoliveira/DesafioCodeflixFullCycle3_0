@@ -32,6 +32,12 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.GenreR
             return genre;
         }
 
+        public List<DomainEntity.Genre> GetExampleListGenres(int count = 10)
+            => Enumerable
+                .Range(1, count)
+                .Select(_ => GetExampleGenre())
+                .ToList();
+
         public string GetValidCategoryName()
         {
             var categoryName = "";

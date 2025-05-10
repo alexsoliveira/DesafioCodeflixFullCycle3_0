@@ -1,5 +1,7 @@
 ﻿using FC.Codeflix.Catalog.Application.Exceptions;
+using FC.Codeflix.Catalog.Domain.Entity;
 using FC.Codeflix.Catalog.Domain.SeedWork;
+using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 using FC.Codeflix.Catalog.Infra.Data.EF;
 using FC.Codeflix.Catalog.Infra.Data.EF.Models;
 using FluentAssertions;
@@ -318,6 +320,40 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.GenreR
                 .FirstOrDefault(x => x.Id == relation.CategoryId);
                 expectedCategory.Should().NotBeNull();
             });
+        }
+
+        [Fact(DisplayName = nameof(ListReturnsItemsAndTotal))]
+        [Trait("Integration/Infra.Data", "GenreRepository - Repositories")]
+        public async Task ListReturnsItemsAndTotal()
+        {
+            CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
+            var exampleGenreList = _fixture.GetExampleListGenres(10);                        
+            await dbContext.Genres.AddRangeAsync(exampleGenreList);            
+            dbContext.SaveChanges();
+            var actDbContext = _fixture.CreateDbContext(true);
+            var genreRepository = new Repository.GenreRepository(
+                actDbContext
+            );
+            var searchInput = new SearchInput(1, 20, "", "", SearchOrder.Asc);
+           
+            var searchResult = await genreRepository.Search(
+                searchInput, 
+                CancellationToken.None                
+            );
+
+            searchResult.Should().NotBeNull();
+            searchResult.CurrentPage.Should().Be(searchInput.Page);
+            searchResult.PerPage.Should().Be(searchInput.PerPage);
+            searchResult.Total.Should().Be(exampleGenreList.Count);
+            searchResult.Items.Should().HaveCount(exampleGenreList.Count);
+            foreach(var resultItem in searchResult.Items)
+            {
+                var exampleGenre = exampleGenreList.Find(x => x.Id == resultItem.Id);
+                exampleGenre.Should().NotBeNull();
+                resultItem!.Name.Should().Be(exampleGenre!.Name);
+                resultItem.IsActive.Should().Be(exampleGenre.IsActive);
+                resultItem.CreatedAt.Should().Be(exampleGenre.CreatedAt);
+            }
         }
     }
 }
