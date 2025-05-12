@@ -322,9 +322,9 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.GenreR
             });
         }
 
-        [Fact(DisplayName = nameof(ListReturnsItemsAndTotal))]
+        [Fact(DisplayName = nameof(SearchReturnsItemsAndTotal))]
         [Trait("Integration/Infra.Data", "GenreRepository - Repositories")]
-        public async Task ListReturnsItemsAndTotal()
+        public async Task SearchReturnsItemsAndTotal()
         {
             CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
             var exampleGenreList = _fixture.GetExampleListGenres(10);                        
@@ -354,6 +354,85 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.GenreR
                 resultItem.IsActive.Should().Be(exampleGenre.IsActive);
                 resultItem.CreatedAt.Should().Be(exampleGenre.CreatedAt);
             }
+        }
+
+        [Fact(DisplayName = nameof(SearchReturnsRelations))]
+        [Trait("Integration/Infra.Data", "GenreRepository - Repositories")]
+        public async Task SearchReturnsRelations()
+        {
+            CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
+            var exampleGenreList = _fixture.GetExampleListGenres(10);
+            await dbContext.Genres.AddRangeAsync(exampleGenreList);
+            var random = new Random();
+            exampleGenreList.ForEach(exampleGenre => {
+                var categoriesListToRelation = 
+                    _fixture.GetExampleCategoriesList(random.Next(0, 4));
+                if(categoriesListToRelation.Count > 0)
+                {
+                    categoriesListToRelation.ForEach(
+                        category => exampleGenre.AddCategory(category.Id)
+                    );
+                    dbContext.Categories.AddRange(categoriesListToRelation);
+                    var relationsToAdd = categoriesListToRelation
+                        .Select(category 
+                            => new GenresCategories(category.Id, exampleGenre.Id)
+                        )
+                        .ToList();
+                    dbContext.GenresCategories.AddRange(relationsToAdd);
+                }
+            });
+            dbContext.SaveChanges();
+            var actDbContext = _fixture.CreateDbContext(true);
+            var genreRepository = new Repository.GenreRepository(
+                actDbContext
+            );
+            var searchInput = new SearchInput(1, 20, "", "", SearchOrder.Asc);
+
+            var searchResult = await genreRepository.Search(
+                searchInput,
+                CancellationToken.None
+            );
+
+            searchResult.Should().NotBeNull();
+            searchResult.CurrentPage.Should().Be(searchInput.Page);
+            searchResult.PerPage.Should().Be(searchInput.PerPage);
+            searchResult.Total.Should().Be(exampleGenreList.Count);
+            searchResult.Items.Should().HaveCount(exampleGenreList.Count);
+            foreach (var resultItem in searchResult.Items)
+            {
+                var exampleGenre = exampleGenreList
+                    .Find(x => x.Id == resultItem.Id);
+                exampleGenre.Should().NotBeNull();
+                resultItem!.Name.Should().Be(exampleGenre!.Name);
+                resultItem.IsActive.Should().Be(exampleGenre.IsActive);
+                resultItem.CreatedAt.Should().Be(exampleGenre.CreatedAt);
+                resultItem.Categories.Should()
+                    .HaveCount(resultItem.Categories.Count);
+                resultItem.Categories.Should()
+                    .BeEquivalentTo(exampleGenre.Categories);                
+            }
+        }
+
+        [Fact(DisplayName = nameof(SearchReturnsEmptyWhenPersistenceIsEmpty))]
+        [Trait("Integration/Infra.Data", "GenreRepository - Repositories")]
+        public async Task SearchReturnsEmptyWhenPersistenceIsEmpty()
+        {            
+            var actDbContext = _fixture.CreateDbContext(true);
+            var genreRepository = new Repository.GenreRepository(
+                actDbContext
+            );
+            var searchInput = new SearchInput(1, 20, "", "", SearchOrder.Asc);
+
+            var searchResult = await genreRepository.Search(
+                searchInput,
+                CancellationToken.None
+            );
+
+            searchResult.Should().NotBeNull();
+            searchResult.CurrentPage.Should().Be(searchInput.Page);
+            searchResult.PerPage.Should().Be(searchInput.PerPage);
+            searchResult.Total.Should().Be(0);
+            searchResult.Items.Should().HaveCount(0);            
         }
     }
 }
