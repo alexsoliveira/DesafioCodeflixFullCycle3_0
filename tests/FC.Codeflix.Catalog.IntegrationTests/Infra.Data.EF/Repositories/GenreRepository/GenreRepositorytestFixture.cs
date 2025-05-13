@@ -21,11 +21,12 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.GenreR
 
         public DomainEntity.Genre GetExampleGenre(
             bool? isActive = null,
-            List<Guid>? categoriesIds = null
+            List<Guid>? categoriesIds = null, 
+            string? name = null
         )
         {
             var genre = new DomainEntity.Genre(
-                    GetValidGenreName(),
+                    name ?? GetValidGenreName(),
                     isActive ?? GetRandomBoolean()
                 );
             categoriesIds?.ForEach(genre.AddCategory);
@@ -36,6 +37,11 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.GenreR
             => Enumerable
                 .Range(1, count)
                 .Select(_ => GetExampleGenre())
+                .ToList();
+
+        public List<DomainEntity.Genre> GetExampleListGenresByNames(List<string> names)
+            => names
+                .Select(name => GetExampleGenre(name: name))
                 .ToList();
 
         public string GetValidCategoryName()
