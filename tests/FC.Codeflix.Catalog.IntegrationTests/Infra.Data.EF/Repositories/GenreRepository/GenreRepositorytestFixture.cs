@@ -1,4 +1,5 @@
 ﻿using FC.Codeflix.Catalog.Domain.Entity;
+using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 using FC.Codeflix.Catalog.IntegrationTests.Base;
 using Xunit;
 using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
@@ -79,5 +80,27 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.GenreR
         public List<Category> GetExampleCategoriesList(int length = 10)
             => Enumerable.Range(1, length)
             .Select(_ => GetExampleCategory()).ToList();
+
+        public List<Genre> CloneGenresListOrdered(
+            List<Genre> genresList,
+            string orderBy,
+            SearchOrder order
+        )
+        {
+            var listClone = new List<Genre>(genresList);
+            var orderedEnumerable = (orderBy.ToLower(), order) switch
+            {
+                ("name", SearchOrder.Asc) => listClone.OrderBy(x => x.Name)
+                    .ThenBy(x => x.Id),
+                ("name", SearchOrder.Desc) => listClone.OrderByDescending(x => x.Name)
+                    .ThenByDescending(x => x.Id),
+                ("id", SearchOrder.Asc) => listClone.OrderBy(x => x.Id),
+                ("id", SearchOrder.Desc) => listClone.OrderByDescending(x => x.Id),
+                ("createdat", SearchOrder.Asc) => listClone.OrderBy(x => x.CreatedAt),
+                ("createdat", SearchOrder.Desc) => listClone.OrderByDescending(x => x.CreatedAt),
+                _ => listClone.OrderBy(x => x.Name).ThenBy(x => x.Id),
+            };
+            return orderedEnumerable.ToList();
+        }
     }
 }
