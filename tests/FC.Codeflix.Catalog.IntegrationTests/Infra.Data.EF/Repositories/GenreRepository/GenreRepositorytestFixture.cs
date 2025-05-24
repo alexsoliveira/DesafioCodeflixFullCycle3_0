@@ -15,7 +15,7 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.GenreR
         : BaseFixture
     {
         public string GetValidGenreName()
-        => Faker.Commerce.Categories(1)[0];
+            => Faker.Commerce.Categories(1)[0];
 
         public bool GetRandomBoolean()
             => new Random().NextDouble() > 0.5;
