@@ -1,4 +1,5 @@
-﻿using FC.Codeflix.Catalog.Infra.Data.EF.Repositories;
+﻿using FC.Codeflix.Catalog.Application.Exceptions;
+using FC.Codeflix.Catalog.Infra.Data.EF.Repositories;
 using FluentAssertions;
 using Xunit;
 using UseCase = FC.Codeflix.Catalog.Application.UseCases.Genre.GetGenre;
@@ -33,6 +34,26 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Application.UseCases.Genre.GetGen
             output.Name.Should().Be(expectedGenre.Name);
             output.IsActive.Should().Be(expectedGenre.IsActive);
             output.CreatedAt.Should().Be(expectedGenre.CreatedAt);
+        }
+
+        [Fact(DisplayName = nameof(GetGenreThrowsWhennotFound))]
+        [Trait("Integration/Application", "GetGenre - Use Cases")]
+        public async Task GetGenreThrowsWhennotFound()
+        {
+            var genresExampleList = _fixture.GetExampleListGenres(10);
+            var randomGuid = Guid.NewGuid();
+            var dbArrangeContext = _fixture.CreateDbContext();
+            await dbArrangeContext.Genres.AddRangeAsync(genresExampleList);
+            await dbArrangeContext.SaveChangesAsync();
+            var genreRepository = new GenreRepository(_fixture.CreateDbContext(true));
+            var useCase = new UseCase.GetGenre(genreRepository);
+            var input = new UseCase.GetGenreInput(randomGuid);
+
+            var action = async () 
+                => await useCase.Handle(input, CancellationToken.None);
+
+            await action.Should().ThrowAsync<NotFoundException>()
+                .WithMessage($"Genre '{randomGuid}' not found.");
         }
     }
 }
