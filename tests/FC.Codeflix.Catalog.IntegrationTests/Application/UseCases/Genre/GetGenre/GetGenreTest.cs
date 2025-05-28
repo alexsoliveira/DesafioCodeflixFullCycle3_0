@@ -92,7 +92,11 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Application.UseCases.Genre.GetGen
             output.CreatedAt.Should().Be(expectedGenre.CreatedAt);
             output.Categories.Should().HaveCount(expectedGenre.Categories.Count);
             output.Categories.ToList().ForEach(
-                id => expectedGenre.Categories.Should().Contain(id)
+                relationModel => 
+                {
+                    expectedGenre.Categories.Should().Contain(relationModel.Id);
+                    relationModel.Name.Should().BeNull();
+                }
             );
         }
     }
