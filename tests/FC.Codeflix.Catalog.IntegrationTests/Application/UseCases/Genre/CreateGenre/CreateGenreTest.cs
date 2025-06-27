@@ -8,6 +8,7 @@ using FC.Codeflix.Catalog.Application.UseCases.Genre.Common;
 using FluentAssertions;
 using FC.Codeflix.Catalog.Infra.Data.EF.Models;
 using Microsoft.EntityFrameworkCore;
+using FC.Codeflix.Catalog.Application.Exceptions;
 
 namespace FC.Codeflix.Catalog.IntegrationTests.Application.UseCases.Genre.CreateGenre
 {
@@ -95,6 +96,36 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Application.UseCases.Genre.Create
             List<Guid> categoryIdsRelatedFromDb = 
                 relations.Select(relation => relation.CategoryId).ToList();
             categoryIdsRelatedFromDb.Should().BeEquivalentTo(input.CategoriesIds);
+        }
+
+        [Fact(DisplayName = nameof(CreateGenreThrowsWhenCategoryDoesntExists))]
+        [Trait("Integration/Application", "CreateGenre - Use Cases")]
+        public async Task CreateGenreThrowsWhenCategoryDoesntExists()
+        {
+            List<DomainEntity.Category> exampleCategories =
+                _fixture.GetExampleCategoriesList(5);
+            CodeflixCatalogDbContext arrangeDbContext = _fixture.CreateDbContext();
+            await arrangeDbContext.Categories.AddRangeAsync(exampleCategories);
+            await arrangeDbContext.SaveChangesAsync();
+            CreateGenreInput input = _fixture.GetExampleInput();
+            input.CategoriesIds = exampleCategories
+                .Select(category => category.Id).ToList();
+            Guid randomGuid = Guid.NewGuid();
+            input.CategoriesIds.Add(randomGuid);
+            CodeflixCatalogDbContext actDbContext = _fixture.CreateDbContext(true);
+            UseCase.CreateGenre createGenre = new UseCase.CreateGenre(
+                new GenreRepository(actDbContext),
+                new UnitOfWork(actDbContext),
+                new CategoryRepository(actDbContext)
+            );
+
+            Func<Task<GenreModelOutput>> action = async () => await createGenre.Handle(
+                input,
+                CancellationToken.None
+            );
+
+            await action.Should().ThrowAsync<RelatedAggregateException>()
+                .WithMessage($"Related category id (or ids) not found: {randomGuid}");
         }
     }
 }
